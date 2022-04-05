@@ -1,0 +1,15 @@
+textarea {
+    min-height: 400px;
+}
+#mail-box{
+    list-style: none;
+}
+#mail-box > li{
+    padding: 5px;
+    border: solid 1px;
+    /* margin: 3px; */
+}
+#mail-box > li:hover{
+    border: solid 3px gray;
+    cursor: pointer;
+}
