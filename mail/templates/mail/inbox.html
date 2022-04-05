@@ -12,7 +12,16 @@
     <hr>
 
     <div id="email-view">
+        <div id="email-header">
+            <div><b>From: </b><span id="email-sender"></span></div>
+            <div><b>To: </b><span id="email-recipients"></span></div>
+            <div><b>Subject: </b> <span id="email-subject"></span> </div>
+            <div><b>Timestamp: </b> <span id="email-timestamp"></span> </div>
+            <button class="btn btn-sm btn-outline-primary" id="reply-button">Reply</button>
+        </div>
+        <p id="email-body"></p>
     </div>
+
     <div id="emails-view">
         <ul id="mail-box"></ul>
     </div>

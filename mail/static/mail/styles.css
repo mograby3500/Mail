@@ -5,6 +5,7 @@ textarea {
     list-style: none;
 }
 #mail-box > li{
+    margin-top: 5px;
     padding: 5px;
     border: solid 1px;
     /* margin: 3px; */
@@ -12,4 +13,26 @@ textarea {
 #mail-box > li:hover{
     border: solid 3px gray;
     cursor: pointer;
+}
+
+#row-email-left{
+    font-weight:550;
+}
+#row-email-mid{
+    margin-left: 10px;
+}
+#row-email-right{
+    float: right;
+}
+#email-header{
+    padding: 5px;
+    border: solid 1px;
+    border-radius: 10px;
+}
+#email-body{
+    margin-top: 5px;
+    padding: 5px;
+    border: solid 1px;
+    white-space: pre-wrap;
+    border-radius: 10px;
 }
