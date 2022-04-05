@@ -58,7 +58,36 @@ function compose_email() {
   document.querySelector('#compose-body').value = '';
 }
 
-function view_email(id, show_reply){
+function show(id){
+  document.querySelector(`#${id}`).style.display= 'inline';
+}
+function hide(id){
+  document.querySelector(`#${id}`).style.display= 'none';
+}
+
+function archive(id){
+  fetch(`/emails/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      archived: true
+    })
+  });
+  load_mailbox('inbox');
+}
+
+
+function unarchive(id){
+  fetch(`/emails/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      archived: false
+    })
+  });
+  load_mailbox('inbox');
+}
+
+
+function view_email(id, mailbox){
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'none';
   document.querySelector('#email-view').style.display = 'block';
@@ -85,11 +114,25 @@ function view_email(id, show_reply){
     //email body
     document.querySelector('#email-body').innerHTML= email.body;
     
-    if(show_reply){
-      document.querySelector('#reply-button').style.display= 'block';
-    }else{
-      document.querySelector('#reply-button').style.display= 'none';
+    
+    //show the buttons you need according to which mailbox you're viewing
+    show('reply-button');
+    show('archive');
+    show('unarchive');
+
+    if(mailbox === 'inbox'){
+      hide('unarchive');
+    }else if(mailbox === 'sent'){
+      hide('reply-button');
+      hide('archive');
+      hide('unarchive');
+    }else if(mailbox === 'archive'){
+      hide('reply-button');
+      hide('archive');
     }
+    document.querySelector('#archive').onclick= () => archive(id);
+    document.querySelector('#unarchive').onclick= () => unarchive(id);
+
 
     fetch(`/emails/${id}`, {
       method: 'PUT',
@@ -144,7 +187,7 @@ function load_mailbox(mailbox) {
       li.appendChild(span3);
       
       li.id= 'row-email';
-      li.onclick= () => view_email(email.id, mailbox === 'inbox');
+      li.onclick= () => view_email(email.id, mailbox);
       list.append(li);
     }
   })
