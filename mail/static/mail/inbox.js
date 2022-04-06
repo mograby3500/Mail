@@ -43,19 +43,16 @@ function  send_email(){
 
   return false;
 }
-function compose_email() {
-
+function compose_email(recipients=null, subject= null, body= null) {
   // Show compose view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'block';
   document.querySelector('#email-view').style.display = 'none';
-
-
-
+  
   // Clear out composition fields
-  document.querySelector('#compose-recipients').value = '';
-  document.querySelector('#compose-subject').value = '';
-  document.querySelector('#compose-body').value = '';
+  document.querySelector('#compose-recipients').value = recipients;
+  document.querySelector('#compose-subject').value = subject;
+  document.querySelector('#compose-body').value = body;
 }
 
 function show(id){
@@ -71,8 +68,10 @@ function archive(id){
     body: JSON.stringify({
       archived: true
     })
+  })
+  .then(function(){
+    load_mailbox('inbox');
   });
-  load_mailbox('inbox');
 }
 
 
@@ -82,10 +81,11 @@ function unarchive(id){
     body: JSON.stringify({
       archived: false
     })
+  })
+  .then(function(){
+    load_mailbox('inbox');
   });
-  load_mailbox('inbox');
 }
-
 
 function view_email(id, mailbox){
   document.querySelector('#emails-view').style.display = 'none';
@@ -130,8 +130,19 @@ function view_email(id, mailbox){
       hide('reply-button');
       hide('archive');
     }
+
+    //reply subject
+    if(email.subject.length >= 3 && email.subject[0]==='R' && email.subject[1]==='e' && email.subject[2]===':')
+      re_subject= email.subject;
+    else
+      re_subject= "Re: " + email.subject;
+
+    //onclick for archive and unarchive
     document.querySelector('#archive').onclick= () => archive(id);
     document.querySelector('#unarchive').onclick= () => unarchive(id);
+    document.querySelector('#reply-button').onclick= () => compose_email(email.sender, re_subject, 
+      `On ${email.timestamp}, ${email.sender} wrote:\n${email.body}\n----\n`);
+
 
 
     fetch(`/emails/${id}`, {
@@ -142,7 +153,6 @@ function view_email(id, mailbox){
     })
   })
 }
-
 
 function load_mailbox(mailbox) {
   // Show the mailbox and hide other views
